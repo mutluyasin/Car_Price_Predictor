@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Car Price Predictor</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      background: #121212;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      padding: 20px;
+      background: #1e1e1e;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #4c6ef5;
+      margin-bottom: 20px;
+    }
+
+    form {
+      width: 100%;
+    }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 0 0 5px;
+      font-weight: bold;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    input[type="text"], select {
+      width: 280px;
+      padding: 10px;
+      margin: 0 5px 10px 5px;
+      border-radius: 5px;
+      border: 1px solid #333;
+      font-size: 16px;
+      background: #2e2e2e;
+      color: #ffffff;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: #4c6ef5;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #4c6ef5;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #3b5bdb;
+    }
+
+    .prediction {
+      margin-top: 20px;
+      padding: 15px;
+      background: #2e2e2e;
+      border-radius: 5px;
+      color: #4c6ef5;
+      font-weight: bold;
+      text-align: center;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Car Price Predictor</h1>
+
+        <form action="OneForAll_PricePredictor" method="POST">
+            <div class="form-row">
+                <div>
+                    <label for="dropdown1">Brand:</label>
+                    <select id="dropdown1" name="dropdown1" onchange="updateSeriesOptions()">
+                        {% for model in car_brands %}
+                            <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="dropdown2">Series:</label>
+                    <select id="dropdown2" name="dropdown2" onchange="updateListItems()">
+                        <!-- Options will be dynamically populated based on Model selection -->
+                    </select>
+                </div>
+                <div>
+                    <label for="dropdown3">Model:</label>
+                    <select id="dropdown3" name="dropdown3">
+                        <!-- Options will be dynamically populated based on Series selection -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="feature1">Year:</label>
+                    <input type="text" id="feature1" name="feature1">
+                </div>
+                <div>
+                    <label for="feature2">Kilometer:</label>
+                    <input type="text" id="feature2" name="feature2">
+                </div>
+                <div>
+                    <label for="feature3">Engine Volume:</label>
+                    <input type="text" id="feature3" name="feature3">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="feature4">Engine Power:</label>
+                    <input type="text" id="feature4" name="feature4">
+                </div>
+                <div>
+                    <label for="feature5">Paint or changed (1 or 0):</label>
+                    <input type="text" id="feature5" name="feature5">
+                </div>
+                <div>
+                    <label for="feature6">Fuel tank capacity:</label>
+                    <input type="text" id="feature6" name="feature6">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="dropdown4">Body Type:</label>
+                    <select id="dropdown4" name="dropdown4">
+                        {% for model in body_type_info %}
+                            <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="dropdown5">Gear Type:</label>
+                    <select id="dropdown5" name="dropdown5">
+                        {% for model in gear_type_info %}
+                            <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="dropdown6">Color:</label>
+                    <select id="dropdown6" name="dropdown6">
+                        {% for model in color_info %}
+                            <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="dropdown7">Drive:</label>
+                    <select id="dropdown7" name="dropdown7">
+                        {% for model in drive_info %}
+                            <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="dropdown8">Fuel Type:</label>
+                    <select id="dropdown8" name="dropdown8">
+                        {% for model in fuel_type_info %}
+                            <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <div class="prediction">
+            <h2>{{ prediction_text }}</h2>
+        </div>
+    </div>
+
+
+    <script>
+        function updateSeriesOptions() {
+            const selectedModel = document.getElementById('dropdown1').value;
+            $.ajax({
+                url: 'get_series_options',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ selected_model: selectedModel }),
+                success: function(response) {
+                    const dropdown2 = document.getElementById('dropdown2');
+                    dropdown2.innerHTML = '';
+                    response.forEach(function(option) {
+                        const newOption = document.createElement('option');
+                        newOption.value = option;
+                        newOption.textContent = option;
+                        dropdown2.appendChild(newOption);
+                    });
+                    updateListItems(); // Update Dropdown 3 based on new Dropdown 2 options
+                }
+            });
+        }
+
+        function updateListItems() {
+            const selectedModel = document.getElementById('dropdown1').value;
+            const selectedSeries = document.getElementById('dropdown2').value;
+            $.ajax({
+                url: 'get_list_items',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ selected_model: selectedModel, selected_series: selectedSeries }),
+                success: function(response) {
+                    const dropdown3 = document.getElementById('dropdown3');
+                    dropdown3.innerHTML = '';
+                    response.forEach(function(option) {
+                        const newOption = document.createElement('option');
+                        newOption.value = option;
+                        newOption.textContent = option;
+                        dropdown3.appendChild(newOption);
+                    });
+                }
+            });
+        }
+
+        // Trigger initial update
+        $(document).ready(function() {
+            updateSeriesOptions();
+        });
+    </script>
+  </body>
+</html>
